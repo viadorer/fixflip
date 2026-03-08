@@ -1681,9 +1681,9 @@ function toggleFaq(btn) {
     }
 }
 
-// Realvisor API Configuration
+// Realvisor API Configuration - using Vercel serverless function
 const REALVISOR_CONFIG = {
-    apiUrl: 'https://api-production-88cf.up.railway.app/api/v1/public/api-leads/submit',
+    apiUrl: '/api/submit-lead',
 };
 
 // Form submit - Realvisor API integration
