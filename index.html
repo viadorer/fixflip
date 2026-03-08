@@ -1719,11 +1719,8 @@ async function handleFormSubmit(e) {
             propertyType: formData.propertyType,
             location: formData.location,
             source: 'fixflip.cz',
-        },
-        metadata: {
             pageUrl: window.location.href,
             referrer: document.referrer,
-            userAgent: navigator.userAgent,
             timestamp: new Date().toISOString(),
         },
     };
