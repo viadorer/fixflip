@@ -1,0 +1,988 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FIXANDFLIP.CZ - Vydělávejte na nemovitostních transformacích</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800;900&family=Open+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --orange: #FF5500;
+            --orange-light: #FF7733;
+            --dark: #222222;
+            --gray: #555555;
+            --light-gray: #f5f5f5;
+            --white: #ffffff;
+            --glass-highlight: rgba(255, 255, 255, 0.3);
+            --glass-border: rgba(255, 255, 255, 0.4);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Open Sans', sans-serif;
+            line-height: 1.6;
+            color: var(--dark);
+            background-color: var(--white);
+        }
+        
+        h1, h2, h3, h4, h5 {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            line-height: 1.2;
+        }
+        
+        h2 {
+            font-size: 2rem;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        p {
+            margin-bottom: 1rem;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--orange);
+            color: var(--white);
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 600;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-size: 1rem;
+            border: none;
+            box-shadow: 0 4px 10px rgba(255, 85, 0, 0.3);
+        }
+        
+        .btn:hover {
+            background-color: var(--orange-light);
+        }
+        
+        .header {
+            position: fixed;
+            width: 100%;
+            top: 20px;
+            left: 0;
+            z-index: 100;
+        }
+        
+        /* Přidání vnitřního zvýraznění pro skleněný efekt */
+        .header .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 40%;
+            background: linear-gradient(to bottom, var(--glass-highlight), transparent);
+            border-radius: 50px 50px 0 0;
+            pointer-events: none;
+        }
+        
+        .header .container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.6);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 50px;
+            padding: 10px 25px;
+            max-width: 1100px;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+        
+        .site-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 900;
+            font-size: 1.85rem;
+            color: #000;
+            letter-spacing: 1px;
+        }
+        
+        .ampersand {
+            color: var(--orange);
+            font-style: italic;
+            font-weight: 900;
+            font-size: 2rem;
+            margin: 0 -2px;
+        }
+        
+        .nav-btn {
+            border-radius: 30px;
+            padding: 12px 25px;
+            font-size: 0.9rem;
+            border: 1px solid var(--glass-border);
+        }
+        
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7)),
+                        url('u9534644866_A_modern_luxury_home_exterior_with_a_sleek_garage_487a76ef-f23e-4ea3-9d35-bba43fa61724_1.png');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            text-align: center;
+            padding: 0;
+        }
+        
+        .scroll-arrow {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            animation: bounce 2s infinite;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .scroll-arrow svg {
+            width: 40px;
+            height: 40px;
+            fill: var(--white);
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-20px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+        }
+        
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+            font-style: italic;
+        }
+        
+        .section {
+            padding: 100px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .section-alt {
+            background-color: var(--light-gray);
+        }
+        
+        .section-shape {
+            position: absolute;
+            z-index: -1;
+            opacity: 0.15;
+        }
+        
+        .shape-circle {
+            width: 300px;
+            height: 300px;
+            border-radius: 50%;
+            background: var(--orange);
+            filter: blur(50px);
+        }
+        
+        .shape-square {
+            width: 250px;
+            height: 250px;
+            transform: rotate(45deg);
+            background: var(--orange-light);
+            filter: blur(40px);
+        }
+        
+        .shape-line {
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, transparent, var(--orange), transparent);
+            margin: 60px 0;
+        }
+        
+        .divider {
+            text-align: center;
+            position: relative;
+            margin: 60px 0;
+        }
+        
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+            z-index: 1;
+        }
+        
+        .divider span {
+            display: inline-block;
+            padding: 0 20px;
+            background-color: white;
+            position: relative;
+            z-index: 2;
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        .section-heading {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .section-heading:after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background: var(--orange);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+        
+        .problem-box {
+            background-color: var(--light-gray);
+            border-radius: 10px;
+            padding: 30px;
+            margin-bottom: 40px;
+            border-left: 5px solid var(--orange);
+        }
+        
+        .problem-box blockquote {
+            font-style: italic;
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .problem-list, .benefits-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        
+        .problem-list li, .benefits-list li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+        }
+        
+        .problem-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            background-color: var(--gray);
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M18.364 18.364a9 9 0 1 1-12.728 0' fill='rgba(255,255,255,1)'/%3E%3Cpath d='M12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12h2a8 8 0 1 0 8-8V2z' fill='rgba(255,255,255,1)'/%3E%3C/svg%3E");
+            background-size: cover;
+            top: 2px;
+        }
+        
+        .benefits-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            width: 18px;
+            height: 18px;
+            background-color: var(--orange);
+            border-radius: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath d='M10 15.172l9.192-9.193 1.415 1.414L10 18l-6.364-6.364 1.414-1.414z' fill='rgba(255,255,255,1)'/%3E%3C/svg%3E");
+            background-size: cover;
+            top: 2px;
+        }
+        
+        .process-steps {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 3rem 0;
+        }
+        
+        .step {
+            flex-basis: 48%;
+            margin-bottom: 2rem;
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 40px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+            border: 1px solid rgba(0, 0, 0, 0.03);
+        }
+        
+        .step:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+        }
+        
+        .step-number {
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--orange) 0%, var(--orange-light) 100%);
+            border-radius: 0 16px 0 80px;
+            opacity: 0.8;
+        }
+        
+        .step-number span {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-size: 1.8rem;
+            font-weight: 800;
+        }
+        
+        .step h3 {
+            color: var(--orange);
+            margin-bottom: 1rem;
+        }
+        
+        .case-study {
+            background-color: var(--white);
+            border-radius: 16px;
+            padding: 40px;
+            margin-bottom: 3rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            position: relative;
+            border-left: 5px solid var(--orange);
+            transition: transform 0.3s;
+        }
+        
+        .case-study:hover {
+            transform: translateX(5px);
+        }
+        
+        .case-study::before {
+            content: '"';
+            position: absolute;
+            top: -30px;
+            left: 20px;
+            font-size: 120px;
+            font-family: 'Georgia', serif;
+            color: var(--orange);
+            opacity: 0.1;
+            line-height: 1;
+        }
+        
+        .case-study-meta {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin: 1rem 0;
+        }
+        
+        .case-study-meta div {
+            flex-basis: 48%;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial {
+            font-style: italic;
+            padding: 30px;
+            border-left: 3px solid var(--orange);
+            margin: 2rem 0;
+            background-color: #fcfcfc;
+            border-radius: 0 10px 10px 0;
+            position: relative;
+        }
+        
+        .testimonial-author {
+            font-style: normal;
+            margin-top: 15px;
+            font-weight: 600;
+            color: var(--dark);
+            text-align: right;
+        }
+        
+        .meta-value {
+            font-weight: 600;
+            color: var(--dark);
+            margin-left: 5px;
+        }
+        
+        .meta-value.profit {
+            color: var(--orange);
+            font-weight: 700;
+        }
+        
+        .meta-note {
+            font-size: 0.9rem;
+            color: var(--gray);
+            font-style: italic;
+        }
+        
+        .about {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+        }
+        
+        .about-image {
+            flex: 1;
+            min-width: 300px;
+        }
+        
+        .about-content {
+            flex: 2;
+        }
+        
+        .reasons {
+            margin: 3rem 0;
+        }
+        
+        .reason {
+            margin-bottom: 2rem;
+        }
+        
+        .benefits {
+            margin: 3rem 0;
+        }
+        
+        details {
+            margin-bottom: 1rem;
+            background-color: var(--white);
+            border-radius: 5px;
+            padding: 1rem;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        
+        summary {
+            font-weight: 600;
+            cursor: pointer;
+            padding: 0.5rem 0;
+        }
+        
+        .cta-section {
+            text-align: center;
+            padding: 100px 0;
+        }
+        
+        .cta-section h2 {
+            margin-bottom: 2rem;
+        }
+        
+        .bonus-list {
+            margin: 2rem 0;
+            list-style: none;
+        }
+        
+        .bonus-list li {
+            margin-bottom: 0.5rem;
+            position: relative;
+            padding-left: 1.5rem;
+        }
+        
+        .bonus-list li::before {
+            content: "•";
+            color: var(--orange);
+            font-weight: bold;
+            position: absolute;
+            left: 0;
+        }
+        
+        .contact {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 60px 0;
+        }
+        
+        .social-links {
+            display: flex;
+            gap: 20px;
+            margin-top: 1rem;
+        }
+        
+        .social-links a {
+            color: var(--white);
+            text-decoration: none;
+        }
+        
+        .footer {
+            background-color: var(--dark);
+            color: var(--white);
+            padding: 20px 0;
+            text-align: center;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.7rem;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+            
+            .step, .case-study-meta div {
+                flex-basis: 100%;
+            }
+            
+            .about {
+                flex-direction: column;
+            }
+            
+            .scroll-arrow svg {
+                width: 30px;
+                height: 30px;
+            }
+            
+            .header {
+                top: 10px;
+            }
+            
+            .header .container {
+                border-radius: 30px;
+                padding: 8px 15px;
+            }
+            
+            /* Responsive styles for logo-container already handled */
+            
+            .site-name {
+                font-size: 1.5rem;
+            }
+            
+            .ampersand {
+                font-size: 1.65rem;
+            }
+            
+            .nav-btn {
+                padding: 8px 15px;
+                font-size: 0.8rem;
+            }
+        }
+        
+        /* Hero styling is defined above */
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            font-style: italic;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            h2 {
+                font-size: 1.6rem;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="logo-container">
+                <span class="site-name">Fix<span class="ampersand">&</span>Flip</span>
+            </div>
+            <a href="#webinar" class="btn nav-btn">Zhlédnout webinář</a>
+        </div>
+    </header>
+    
+    <script>
+        // Smooth scroll pro šipku a menu odkazy
+        document.addEventListener('DOMContentLoaded', function() {
+            // Získat všechny odkazy s hashem
+            const smoothScrollLinks = document.querySelectorAll('a[href^="#"]');
+            
+            for (const link of smoothScrollLinks) {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 80, // Odečtení výšky headeru
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            }
+        });
+    </script>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content">
+                <h1>Objevte metodu, díky které můžete vydělat 250 000 - 500 000 Kč na jednom nemovitostním projektu za 3-6 měsíců (i bez předchozích zkušeností)</h1>
+                <p>Zjistěte, jak běžní lidé po celé ČR vydělávají na rychlých nemovitostních transformacích a proč je právě teď ideální čas začít.</p>
+                <a href="#webinar" class="btn">Zhlédnout bezplatný webinář</a>
+            </div>
+        </div>
+        <a href="#problem" class="scroll-arrow">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+                <path d="M12 17.414l-6.707-6.707 1.414-1.414L12 14.586l5.293-5.293 1.414 1.414z"/>
+            </svg>
+        </a>
+    </section>
+
+    <!-- Main Content -->
+    <main>
+        <!-- Problem Section -->
+        <section id="problem" class="section">
+            <div class="section-shape shape-circle" style="top: -150px; right: -100px;"></div>
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Máte úspory, ale nevíte, jak je efektivně zhodnotit?</h2>
+                </div>
+                <div class="problem-box">
+                    <blockquote>
+                        "Každý den vidím, jak inflace ukrajuje z hodnoty úspor mých klientů. Zatímco spořicí účty nabízejí 3-4% ročně, skutečná inflace se pohybuje kolem 10%. Bez správné investiční strategie jsou vaše těžce vydělané peníze odsouzeny k postupnému znehodnocování." - David Choc
+                    </blockquote>
+                </div>
+
+                <h3>Tradiční způsoby investování do nemovitostí vás zklamou:</h3>
+                <ul class="problem-list">
+                    <li><strong>Pronájmy:</strong> Nízký výnos 3-5% ročně, starosti s nájemníky, vázaný kapitál na desetiletí</li>
+                    <li><strong>Investiční fondy:</strong> Vysoké poplatky, omezený výnos, ztráta kontroly nad investicí</li>
+                    <li><strong>Dlouhodobá držba nemovitostí:</strong> Kapitál vázaný na roky, nelikvidní investice</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Fix & Flip Strategy -->
+        <section class="section section-alt">
+            <div class="section-shape shape-square" style="top: 50px; right: -100px;"></div>
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Představuji: Strategie "Fix & Flip"</h2>
+                </div>
+                <p><strong>Fix & Flip</strong> je investiční přístup, který vám umožní:</p>
+                <ul class="benefits-list">
+                    <li><strong>Dosáhnout zisku v řádu MĚSÍCŮ, ne let</strong> - Průměrně 3-6 měsíců na jeden projekt</li>
+                    <li><strong>Generovat konkrétní, předvídatelný výnos</strong> - Typicky 15-30% z celkové investice</li>
+                    <li><strong>Pracovat na projektech, ne se starat o nájemníky</strong> - Žádné problémy s výběrem nájemného</li>
+                    <li><strong>Opakovaně využívat stejný kapitál</strong> - Možnost realizovat 2-3 projekty ročně se stejnými prostředky</li>
+                    <li><strong>Postupně budovat významné jmění</strong> - Mnoho mých klientů dosáhlo svého prvního milionu během 12-18 měsíců</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- How Fix & Flip Works -->
+        <section class="section">
+            <div class="section-shape shape-circle" style="top: -100px; left: -150px;"></div>
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Jak přesně "Fix & Flip" funguje?</h2>
+                </div>
+                <img src="https://via.placeholder.com/800x300" alt="Schéma procesu FixAndFlip" class="full-width-img">
+
+                <div class="process-steps">
+                    <div class="step">
+                        <div class="step-number"><span>1</span></div>
+                        <h3>NAJÍT podhodnocenou nemovitost</h3>
+                        <p>Naučím vás identifikovat nemovitosti, které můžete koupit za 70-85% jejich potenciální hodnoty - nemovitosti, které běžní kupci přehlížejí, ale zkušené oko v nich vidí potenciál.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number"><span>2</span></div>
+                        <h3>ANALYZOVAT ziskovost projektu</h3>
+                        <p>S mým systémem budete schopni během 10 minut vypočítat potenciální zisk projektu a rozhodnout, zda do něj investovat.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number"><span>3</span></div>
+                        <h3>ZHODNOTIT nemovitost</h3>
+                        <p>Ukážu vám, které rekonstrukce přinášejí nejvyšší návratnost investice a jak optimalizovat rozpočet pro maximální zisk.</p>
+                    </div>
+                    <div class="step">
+                        <div class="step-number"><span>4</span></div>
+                        <h3>PRODAT za maximální cenu</h3>
+                        <p>Naučím vás, jak správně nacenit, prezentovat a prodat nemovitost za nejvyšší možnou cenu v nejkratším možném čase.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Case Studies -->
+        <section class="section section-alt">
+            <div class="section-shape shape-circle" style="bottom: 50px; left: 100px;"></div>
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Reálné výsledky našich klientů</h2>
+                </div>
+                <img src="https://via.placeholder.com/800x400" alt="Před a po rekonstrukci" class="full-width-img">
+
+                <div class="case-study">
+                    <h3>Martina K., 36 let, Praha</h3>
+                    <p class="property-info"><em>Byt 2+1, 56m²</em></p>
+
+                    <div class="case-study-meta">
+                        <div>
+                            <p><strong>Nákupní cena:</strong> <span class="meta-value">2,2 mil. Kč</span></p>
+                        </div>
+                        <div>
+                            <p><strong>Náklady na renovaci:</strong> <span class="meta-value">380 000 Kč</span></p>
+                        </div>
+                        <div>
+                            <p><strong>Prodejní cena:</strong> <span class="meta-value">3,1 mil. Kč</span></p>
+                        </div>
+                        <div>
+                            <p><strong>Čistý zisk:</strong> <span class="meta-value profit">340 000 Kč</span></p>
+                        </div>
+                        <div>
+                            <p><strong>Doba trvání projektu:</strong> <span class="meta-value">4 měsíce</span></p>
+                        </div>
+                    </div>
+
+                    <div class="testimonial">
+                        <p>"Nikdy jsem si nemyslela, že dokážu zrealizovat takový projekt. S Davidovým vedením jsem od prvního dne věděla přesně, co a jak dělat. Dnes již pracuji na svém třetím projektu."</p>
+                        <div class="testimonial-author">- Martina K.</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About the Trainer -->
+        <section class="section">
+            <div class="section-shape shape-circle" style="top: -80px; right: -120px;"></div>
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Od koho se budete učit</h2>
+                </div>
+
+                <div class="about">
+                    <div class="about-image">
+                        <img src="https://via.placeholder.com/400x400" alt="David Choc" class="rounded-img">
+                    </div>
+                    <div class="about-content">
+                        <p><strong>David Choc</strong> je zakladatel FixAndFlip.cz a specialista na rychlé zhodnocení nemovitostí.</p>
+                        <p>Na rozdíl od teoretických "guru" David aktivně realizuje vlastní nemovitostní projekty a své know-how sdílí pouze v praktické, aplikovatelné formě.</p>
+                        <p>Během posledních 5 let pomohl desítkám klientů s realizací jejich prvního úspěšného flipu s průměrným ziskem přes 300 000 Kč.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Now -->
+        <section class="section section-alt">
+            <div class="section-shape shape-square" style="bottom: -100px; right: -120px;"></div>
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Proč je "Fix & Flip" ideální investiční strategie právě teď?</h2>
+                </div>
+
+                <div class="reasons">
+                    <div class="reason">
+                        <h3>1. Aktuální ekonomická situace hraje ve váš prospěch</h3>
+                        <p>Současné ekonomické podmínky vytvářejí ideální prostředí pro nemovitostní flip:</p>
+                        <ul>
+                            <li><strong>Rostoucí počet nucených prodejů</strong> → více příležitostí pro výhodné nákupy</li>
+                            <li><strong>Omezená výstavba nových bytů</strong> → vyšší poptávka po renovovaných nemovitostech</li>
+                            <li><strong>Postupné snižování úrokových sazeb</strong> → lepší dostupnost financování</li>
+                            <li><strong>Vysoká inflace</strong> → potřeba aktivního zhodnocování úspor</li>
+                        </ul>
+                    </div>
+
+                    <div class="reason">
+                        <h3>2. Poptávka po kvalitních, připravených nemovitostech roste</h3>
+                        <p>Průzkumy ukazují, že:</p>
+                        <ul>
+                            <li>78% kupujících preferuje nemovitost v perfektním stavu</li>
+                            <li>65% kupujících nemá čas, znalosti nebo zájem o rekonstrukci</li>
+                            <li>82% kupujících je ochotno zaplatit prémium za "hotovou" nemovitost</li>
+                        </ul>
+                    </div>
+
+                    <div class="reason">
+                        <h3>3. Nižší konkurence než v zahraničí</h3>
+                        <p>Zatímco v USA nebo Velké Británii je flipování běžnou investiční strategií, v ČR je trh stále nenasycený:</p>
+                        <ul>
+                            <li>Méně zkušených flipařů = více dostupných příležitostí</li>
+                            <li>Nižší informovanost prodávajících = možnost výhodnějších nákupů</li>
+                            <li>Rostoucí, ale stále malý trh = prostor pro nové investory</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Benefits -->
+        <section class="section">
+            <div class="container">
+                <h2>Co získáte díky "Fix & Flip" strategii:</h2>
+
+                <div class="benefits">
+                    <ol>
+                        <li><strong>Finanční svobodu</strong> - Možnost vybudovat významné jmění v horizontu 1-3 let</li>
+                        <li><strong>Praktické dovednosti</strong> - Naučíte se oceňovat nemovitosti, řídit rekonstrukce a maximalizovat hodnotu</li>
+                        <li><strong>Časovou flexibilitu</strong> - Můžete začít při zaměstnání a postupně přejít na plný úvazek</li>
+                        <li><strong>Nezávislost na ekonomických cyklech</strong> - Strategie funguje v růstu i recesi</li>
+                        <li><strong>Skalovatelný business</strong> - Možnost postupného růstu od malých projektů k větším</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section class="section section-alt">
+            <div class="section-shape shape-circle" style="top: 100px; right: 100px;"></div>
+            <div class="container">
+                <div class="section-heading">
+                    <h2>Často kladené otázky</h2>
+                </div>
+
+                <details>
+                    <summary><strong>Je flipování nemovitostí legální?</strong></summary>
+                    <p>Ano, flipování je naprosto legální a běžná investiční strategie. Jde o standardní podnikání - nákup, zhodnocení a prodej nemovitosti. Všechny příjmy jsou řádně daněny dle platné legislativy.</p>
+                </details>
+
+                <details>
+                    <summary><strong>Nepoškozuji ostatní kupující, když kupuji nemovitosti pod cenou?</strong></summary>
+                    <p>Ne. Většina nemovitostí, které kupujeme, jsou ve špatném stavu, mají právní komplikace nebo se je majitel potřebuje rychle zbavit. Přinášíme hodnotu tím, že tyto nemovitosti zrekonstruujeme a uvedeme zpět na trh v mnohem lepším stavu.</p>
+                </details>
+
+                <details>
+                    <summary><strong>Co když se mi nepodaří nemovitost prodat?</strong></summary>
+                    <p>Naše analýza před nákupem minimalizuje toto riziko. Navíc, součástí strategie je vždy "plán B" - možnost výhodného pronájmu nemovitosti, pokud by se prodej nezdařil. Právě proto je důležité postupovat systematicky a podle ověřené metody.</p>
+                </details>
+
+                <details>
+                    <summary><strong>Jak dlouho trvá celý proces od nákupu po prodej?</strong></summary>
+                    <p>Průměrný flip trvá 3-6 měsíců: 1 měsíc na nalezení a nákup, 1-2 měsíce na rekonstrukci a 1-2 měsíce na prodej. Zkušenější flipaři dokáží celý proces optimalizovat a zrychlit.</p>
+                </details>
+            </div>
+        </section>
+
+        <!-- CTA Section -->
+        <section id="webinar" class="cta-section">
+            <div class="container">
+                <h2>Připraveni začít svou cestu k finančně svobodnějšímu životu?</h2>
+                <a href="#" class="btn">Zhlédnout bezplatný webinář</a>
+
+                <div class="cta-details">
+                    <h3>Co se dozvíte na webináři:</h3>
+                    <ul class="bonus-list">
+                        <li>Kompletní 4-krokový systém pro úspěšný flip</li>
+                        <li>Jak identifikovat nemovitosti s potenciálem zisku 15-30%</li>
+                        <li>5 nejvýnosnějších typů rekonstrukcí</li>
+                        <li>Jak financovat svůj první projekt i s omezenými prostředky</li>
+                        <li>Reálné případové studie s konkrétními čísly</li>
+                    </ul>
+
+                    <h3>Bonus pro účastníky webináře:</h3>
+                    <ul class="bonus-list">
+                        <li>E-book "5 kritérií úspěšného flipu"</li>
+                        <li>Kalkulačka ziskovosti pro váš první projekt</li>
+                        <li>Checklist před nákupem nemovitosti</li>
+                    </ul>
+
+                    <p><strong>Nejbližší termín: Čtvrtek 28. března 19:00</strong><br>
+                    <em>(Omezená kapacita 100 míst)</em></p>
+
+                    <a href="#" class="btn">Rezervovat místo zdarma</a>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Contact Section -->
+    <section class="contact">
+        <div class="container">
+            <h2>KONTAKT</h2>
+            <p><strong>FixAndFlip.cz</strong><br>
+            Email: info@fixandflip.cz<br>
+            Tel.: +420 XXX XXX XXX</p>
+
+            <div class="social-links">
+                <p><strong>Sledujte nás na sociálních sítích:</strong></p>
+                <a href="#">Facebook</a>
+                <a href="#">Instagram</a>
+                <a href="#">YouTube</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p><em>"Nemovitostní trh nabízí příležitosti každý den. Otázka není, zda existují, ale zda je dokážete rozpoznat a využít."</em> - David Choc</p>
+            <a href="#webinar" class="btn">Rezervovat místo na webináři</a>
+        </div>
+    </footer>
+</body>
+</html>
