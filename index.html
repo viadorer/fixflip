@@ -1683,8 +1683,7 @@ function toggleFaq(btn) {
 
 // Realvisor API Configuration
 const REALVISOR_CONFIG = {
-    apiUrl: 'https://api.realvisor.cz',
-    formCode: 'kontaktni-formu-73131',
+    apiUrl: 'https://api-production-88cf.up.railway.app/api/v1/public/api-leads/submit',
 };
 
 // Form submit - Realvisor API integration
@@ -1734,7 +1733,7 @@ async function handleFormSubmit(e) {
 
     try {
         const response = await fetch(
-            `${REALVISOR_CONFIG.apiUrl}/public/forms/${REALVISOR_CONFIG.formCode}/submit`,
+            REALVISOR_CONFIG.apiUrl,
             {
                 method: 'POST',
                 headers: {
