@@ -1681,18 +1681,78 @@ function toggleFaq(btn) {
     }
 }
 
-// Form submit
-function handleFormSubmit(e) {
+// Realvisor API Configuration
+const REALVISOR_CONFIG = {
+    apiUrl: 'https://api.realvisor.cz',
+    formCode: 'kontaktni-formu-73131',
+};
+
+// Form submit - Realvisor API integration
+async function handleFormSubmit(e) {
     e.preventDefault();
     const form = e.target;
     const btn = form.querySelector('button[type="submit"]');
     const originalText = btn.innerHTML;
 
+    // Collect form data
+    const formData = {
+        name: form.name.value,
+        phone: form.phone.value,
+        email: form.email.value || undefined,
+        propertyType: form.propertyType.value || undefined,
+        location: form.location.value,
+        note: form.note.value || undefined,
+    };
+
+    // Split name into firstName and lastName for API
+    const nameParts = formData.name.trim().split(' ');
+    const firstName = nameParts[0];
+    const lastName = nameParts.slice(1).join(' ') || undefined;
+
+    // Prepare payload for Realvisor API
+    const payload = {
+        firstName: firstName,
+        lastName: lastName,
+        phone: formData.phone,
+        email: formData.email,
+        message: formData.note,
+        data: {
+            propertyType: formData.propertyType,
+            location: formData.location,
+            source: 'fixflip.cz',
+        },
+        metadata: {
+            pageUrl: window.location.href,
+            referrer: document.referrer,
+            userAgent: navigator.userAgent,
+            timestamp: new Date().toISOString(),
+        },
+    };
+
     btn.innerHTML = 'Odesílám...';
     btn.disabled = true;
 
-    // Simulate send - replace with actual endpoint
-    setTimeout(() => {
+    try {
+        const response = await fetch(
+            `${REALVISOR_CONFIG.apiUrl}/public/forms/${REALVISOR_CONFIG.formCode}/submit`,
+            {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(payload),
+            }
+        );
+
+        if (!response.ok) {
+            const error = await response.json();
+            throw new Error(error.message || 'Chyba při odesílání');
+        }
+
+        const result = await response.json();
+        console.log('Form submitted successfully:', result);
+
+        // Success state
         btn.innerHTML = 'Odesláno! Ozveme se vám.';
         btn.style.background = '#22c55e';
         btn.style.boxShadow = '0 4px 16px rgba(34,197,94,0.3)';
@@ -1704,7 +1764,22 @@ function handleFormSubmit(e) {
             btn.style.background = '';
             btn.style.boxShadow = '';
         }, 4000);
-    }, 1000);
+
+    } catch (error) {
+        console.error('Form submission error:', error);
+
+        // Error state
+        btn.innerHTML = 'Chyba při odesílání. Zkuste znovu.';
+        btn.style.background = '#ef4444';
+        btn.style.boxShadow = '0 4px 16px rgba(239,68,68,0.3)';
+
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+            btn.style.background = '';
+            btn.style.boxShadow = '';
+        }, 3000);
+    }
 }
 
 // Smooth scroll
